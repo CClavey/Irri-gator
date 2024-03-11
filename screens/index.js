@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, PixelRatio } from 'react-native';
+import signup from './signup.js';
 
 const { width, height } = Dimensions.get('window');
 const scale = PixelRatio.get();
+
 
 const Index = ({ navigation }) => {
   return (
