@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 const scale = PixelRatio.get();
 
 
-const hubMenu = ({ navigation }) => {
+const potMenu = ({ navigation }) => {
   return (
     <View style={styles.container}>
       
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default hubMenu;
+export default potMenu;
