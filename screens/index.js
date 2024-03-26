@@ -15,11 +15,26 @@ const Index = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Get Started!</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('login')}
+        onPress={() => navigation.navigate('Login')}
       >
         <Text style={styles.buttonText}>Login!</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('PlantCatalogue')}
+      >
+        <Text style={styles.buttonText}>Plant Catalogue</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('editPlant')}
+      >
+        <Text style={styles.buttonText}>Edit Plant</Text>
       </TouchableOpacity>
     </View>
   );
