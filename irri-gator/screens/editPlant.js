@@ -21,7 +21,7 @@ const EditPlant = ({ route }) => {
       return '00:00:00'; 
     }
   };
-  
+
   const navigation = useNavigation();
   const { plantID, plantSpecies, plantDesc, daySchedule, dayTime, hubID } = route.params;
   const formattedDayTime = convertTimeDelta(dayTime);
@@ -33,20 +33,33 @@ const EditPlant = ({ route }) => {
     dayTime: convertTimeDelta(dayTime) || '', 
     hubID: hubID,
   });
+
   const [scheduleForm, setScheduleForm] = useState({
-    dayInterval: daySchedule.toString(),
-    wateringTime: convertTimeDelta(dayTime) || '',
+    day_interval: daySchedule.toString(),
+    watering_time: convertTimeDelta(dayTime) || '',
   });
 
+ 
+  const formatTime = (value) => {
+    const numericValue = value.replace(/\D/g, '');
+    const formattedValue = numericValue.replace(/(\d{2})(?=\d)/g, '$1:');
+    setForm({ ...form, dayTime: formattedValue });
+  };
+
   const updateSchedule = async () => {
-    console.log("NEW STUFF: ", dayInterval, " ::: ", wateringTime)
     try {
-      const response = await fetch(`https://irri-gator.com/update_sched/${hubID}/${plantID}`, {
+      const schedForm = new FormData();
+      schedForm.append('day_interval', scheduleForm.day_interval);
+      schedForm.append('watering_time', scheduleForm.watering_time);
+      console.log(scheduleForm.watering_time)
+      console.log(scheduleForm.day_interval)
+      //body: JSON.stringify({'day_interval': 11, 'watering_time': `(06:00:00)`}),
+      const response = await fetch(`https://irri-gator.com/update_sched/777/irrigator`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(scheduleForm),
+        body: JSON.stringify({'day_interval': scheduleForm.day_interval, 'watering_time': `(${scheduleForm.watering_time})`}),
       });
       const data = await response.text();
       if (data === "success") {
@@ -58,25 +71,6 @@ const EditPlant = ({ route }) => {
       console.error('Error updating schedule:', error);
     }
   };  
-/*<TextInput
-style={[styles.input, styles.largeInput]}
-onChangeText={daySchedule => {
-  const parsedValue = parseInt(daySchedule);
-  setForm({ ...form, daySchedule: !isNaN(parsedValue) ? parsedValue.toString() : '' });
-}}
-value={form.daySchedule}
-placeholder="Plant Schedule (Days)"
-maxLength={2}
-keyboardType="numeric"
-/>
-<TextInput
-style={[styles.input, styles.largeInput]}
-onChangeText={dayTime => formatTime(dayTime)}
-value={form.dayTime}
-keyboardType="numeric"
-maxLength={8}
-placeholder="Time of Day (HH:MM:SS)"
-/>*/
   const editPlants = async () => {
     try {
       const response = await fetch('https://irri-gator.com/updatePlants', {
@@ -88,6 +82,7 @@ placeholder="Time of Day (HH:MM:SS)"
       });
       const data = await response.json();
       if (data.success) {
+        updateSchedule()
         navigation.navigate('PotMenu', { hubID });
       } 
       else {
@@ -97,12 +92,6 @@ placeholder="Time of Day (HH:MM:SS)"
       console.error('Error updating plant:', error);
     }
   };  
-
-  const formatTime = (value) => {
-    const numericValue = value.replace(/\D/g, '');
-    const formattedValue = numericValue.replace(/(\d{2})(?=\d)/g, '$1:');
-    setForm({ ...form, dayTime: formattedValue });
-  };
 
   const deletePlant = async () => {
     try {
@@ -168,7 +157,7 @@ placeholder="Time of Day (HH:MM:SS)"
     setForm(updatedForm);
     setScheduleForm({
       ...scheduleForm,
-      dayInterval: updatedForm.daySchedule,
+      day_interval: updatedForm.daySchedule,
     });
   }}
   value={form.daySchedule}
@@ -179,26 +168,22 @@ placeholder="Time of Day (HH:MM:SS)"
 
 <TextInput
   style={[styles.input, styles.largeInput]}
-  onChangeText={dayTime => {
+  onChangeText={dayTime => { formatTime(dayTime);
     const formattedValue = formatTime(dayTime);
-    const updatedForm = { ...form, dayTime: formattedValue };
-    setForm(updatedForm);
     setScheduleForm({
       ...scheduleForm,
-      wateringTime: updatedForm.dayTime,
+      watering_time: formattedValue, 
     });
   }}
   value={form.dayTime}
-  keyboardType="numeric"
   maxLength={8}
+  keyboardType="numeric"
   placeholder="Time of Day (HH:MM:SS)"
 />
-
       <Pressable
         style={styles.button}
         onPress={async () => {
-          await editPlants();
-          await updateSchedule();
+          editPlants();
         }}
       >
         <Text style={styles.buttonText}>Update</Text>

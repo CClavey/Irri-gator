@@ -26,7 +26,7 @@ const AddPlant = ({ route }) => {
       });
       const data = await response.json();
       if (data.success) {
-        navigation.navigate('PotMenu', { hubID });
+        navigation.navigate('AddPlantConfirm', { hubID });
       } 
       else {
         console.error('update failed');
@@ -39,8 +39,6 @@ const AddPlant = ({ route }) => {
   const formatTime = (value) => {
     const numericValue = value.replace(/\D/g, '');
     const formattedValue = numericValue.replace(/(\d{2})(?=\d)/g, '$1:');
-    console.log(formattedValue)
-    console.log(hubID)
     setForm({ ...form, dayTime: formattedValue });
   };
 

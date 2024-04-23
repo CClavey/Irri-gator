@@ -33,7 +33,7 @@ const Index = ({ navigation }) => {
           <TouchableOpacity>
             <Image
               style={styles.image}
-              source={require('/Users/cole/irri-gator/assets/logo_black.png')} //CHANGE TO YOUR OWN FILEPATH
+              source={require('/Users/cole/irri-gator/assets/white_logo.png')} //CHANGE TO YOUR OWN FILEPATH
             />
           </TouchableOpacity>
         </View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     height: 23,
   },
   startingPage: {
-    backgroundColor: Color.colorYellowgreen_200,
+    backgroundColor: Color.colorSkyblue,
     flex: 1,
     width: "100%",
     overflow: "hidden",

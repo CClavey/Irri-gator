@@ -13,6 +13,8 @@ import Plant4 from '../assets/plant4.png';
 import Plant5 from '../assets/plant5.png';
 
 const PotMenu = ({ navigation, route }) => {
+  const battery = 0;
+  const reservoir = 0;
   const [plants, setPlants] = useState([]);
   const [loading, setLoading] = useState(true);
   const { hubID } = route.params;
@@ -69,8 +71,9 @@ const PotMenu = ({ navigation, route }) => {
   );
   
   const Battery = () => {
-    //const level = Math.floor(Math.random() * 101); // Remove for actual implementation
-    const level = getBattery("777", "irrigator")
+    const level = Math.floor(Math.random() * 101); // Remove for actual implementation
+    //const level = getBattery("777", "irrigator")//{"pot_data": [75, 55]}
+    //const level = battery;
     const batteryColor = level >= 50 ? 'green' : level >= 20 ? 'orange' : 'red';
     return (
       <View style={[styles.symbolContainer, { backgroundColor: 'grey' }]}>
@@ -82,8 +85,9 @@ const PotMenu = ({ navigation, route }) => {
   
   
   const Reservoir = () => {
-    //const level = Math.floor(Math.random() * 101); //Remove for actual implementation
-    const level = getReservoir("777", "irrigator")
+    const level = Math.floor(Math.random() * 101); //Remove for actual implementation
+    //const level = getReservoir("777", "irrigator")
+    //const level = reservoir;
     const reservoirColor = 'grey'; 
     let waterColor;
     if (level >= 50) {
@@ -96,6 +100,9 @@ const PotMenu = ({ navigation, route }) => {
     return (
       <View style={[styles.reservoirContainer, { backgroundColor: reservoirColor }]}>
         <View style={[styles.reservoirLevel, { height: `${level}%`, backgroundColor: waterColor }]} />
+        <View style={[styles.bottleLine, { top: '25%' }]} />
+        <View style={[styles.bottleLine, { top: '50%' }]} />
+        <View style={[styles.bottleLine, { top: '75%' }]} />
       </View>
     );
   };
@@ -108,25 +115,28 @@ const PotMenu = ({ navigation, route }) => {
 
   const getBattery = async (hubID, plantID) => {
     try {
-      const response = await fetch(`https://irri-gator.com/get_pot_data/${hubID}/${plantID}`);
-      const data = await response.json();
-      return data[0]; 
+        const response = await fetch(`https://irri-gator.com/get_pot_data/${hubID}/${plantID}`);
+        const data = await response.json();
+        console.log("RAW DATA ", data)
+        //battery = data.pot_data[0]; 
+        //reservoir = data.pot_data[1];
+        return data.pot_data[0];
     } catch (error) {
-      console.error('Error fetching battery data:', error);
-      return 0; 
+        console.error('Error fetching battery data:', error);
+        return;
     }
-  };
-  
-  const getReservoir = async (hubID, plantID) => {
+};
+
+const getReservoir = async (hubID, plantID) => {
     try {
-      const response = await fetch(`https://irri-gator.com/get_pot_data/${hubID}/${plantID}`);
-      const data = await response.json();
-      return data[1];
+        const response = await fetch(`https://irri-gator.com/get_pot_data/${hubID}/${plantID}`);
+        const data = await response.json();
+        return data.pot_data[1]; 
     } catch (error) {
-      console.error('Error fetching reservoir data:', error);
-      return 0; 
+        console.error('Error fetching reservoir data:', error);
+        return 0;
     }
-  };
+};
 //<Battery level={getBattery(hubID, item.plantID)}/> //hubID is 777 for testing so just hard set it to that
 //<Reservoir level = {getReservoir(hubID, item.plantID)}/>
 //<Battery /> 
@@ -141,7 +151,7 @@ const PotMenu = ({ navigation, route }) => {
             <Text style={styles.plantName}>{item.plantSpecies}</Text>
             <Text>Watering Schedule: {item.daySchedule} days</Text>
           </View>
-          <Battery /> 
+          <Battery level={getBattery}/> 
           <Reservoir />
         </View>
       </TouchableOpacity>
@@ -187,7 +197,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 60,
     borderWidth: 2,
-    borderRadius: 5,
+    borderColor: 'black',
     justifyContent: 'flex-end',
   },
   batteryLevel: {
@@ -196,12 +206,18 @@ const styles = StyleSheet.create({
   },
   reservoirContainer: {
     width: 40,
-    height: 40,
-    borderRadius: 20, 
+    height: 40, // Adjust the height to make it more rectangular
+    borderRadius: 10, // Adjust the borderRadius to make it rounded
     marginRight: 5,
     borderColor: 'black',
     borderWidth: 1,
     overflow: 'hidden', 
+  },
+  bottleLine: {
+    position: 'absolute',
+    backgroundColor: 'black',
+    width: '100%',
+    height: 2,
   },
   reservoirLevel: {
     position: 'absolute',
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
   symbolContainer: {
     width: 20,
     height: 40, 
-    borderRadius: 5,
+    //borderRadius: 5,
     marginRight: 5,
     borderColor: 'black',
     borderWidth: 1,
@@ -224,7 +240,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'green', 
-    borderRadius: 5,
+    //borderRadius: 5,
   },
   image: {
     width: 80,
@@ -269,13 +285,17 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   batteryTop: {
-    width: 20,
-    height: 10,
+    width: 13,
+    height: 5,
     backgroundColor: 'grey',
     position: 'absolute',
-    top: 5,
-    left: 5,
+    borderRadius: 0,
+    borderColor: 'black', 
+    borderWidth: 1, 
+    top: -5,
+    left: 2,
   },
+  
 });
 
 export default PotMenu;

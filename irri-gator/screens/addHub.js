@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native'; 
-import { StyleSheet, View, TextInput, Pressable, Text } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, TextInput, Pressable, Text, Image, } from "react-native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 import { useFocusEffect } from '@react-navigation/native';
-//CC
+
 
 const AddHub = ({ route }) => {
   const navigation = useNavigation();
@@ -22,27 +22,31 @@ const AddHub = ({ route }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(form),
-      });
+      }); 
       const data = await response.json();
       if (data.success) {
         navigation.navigate('HubMenu', { email });
-      } 
+      }
       else {
         console.error('update failed');
       }
     } catch (error) {
       console.error('Error adding hub:', error);
     }
-  };  
+  };
 
   return (
     <View style={styles.container}>
+      <View>
+        <Text style={styles.newHub}>New Hub</Text>
+        <Image source={require('../assets/hub.png')} style={styles.hubImage} />
+      </View>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
           onChangeText={hubID => {
             const parsedValue = parseInt(hubID);
-            setForm({ ...form, hubID});
+            setForm({ ...form, hubID });
           }}
           value={form.hubID}
           keyboardType="numeric"
@@ -59,7 +63,10 @@ const AddHub = ({ route }) => {
 
       <Pressable
         style={styles.button}
-        onPress={addHubs}
+        onPress={async () => {
+          await addHubs();
+          navigation.navigate('AddHubConfirm', { email }); // Navigate to HubMenu
+      }}
       >
         <Text style={styles.buttonText}>Add</Text>
       </Pressable>
@@ -70,11 +77,25 @@ const AddHub = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Color.colorSkyblue,
+    // backgroundColor: Color.colorSkyblue,
     padding: 20,
-    alignItems: 'center', 
+    alignItems: 'center',
+  },
+  hubImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 40,
+    alignContent: 'center',
+  },
+  newHub: {
+    top: '10%',
+    left: 1,
+    fontSize: 40,
+    fontFamily: FontFamily.avenir,
+    // textAlign: 'left',
   },
   formContainer: {
+    top: '2%',
     width: '100%',
     marginBottom: 20,
   },
@@ -89,10 +110,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.avenir,
     color: Color.colorDarkgray,
     backgroundColor: Color.colorGainsboro,
-    width: '100%', 
+    width: '100%',
   },
   button: {
-    backgroundColor: Color.colorSteelblue, 
+    top: '10%',
+    backgroundColor: Color.colorSteelblue,
     width: 250,
     height: 60,
     borderRadius: Border.br_xl,
