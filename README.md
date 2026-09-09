@@ -45,7 +45,8 @@ The control center for the end user.
 
 
 ### IoT Context Diagram
-<img width="777" height="341" alt="Screenshot 2026-09-09 at 1 58 48 PM" src="https://github.com/user-attachments/assets/3168837f-c620-42cc-8cbb-4a547d34b814" />
+<img width="781" height="330" alt="Screenshot 2026-09-09 at 2 16 25 PM" src="https://github.com/user-attachments/assets/75b82f73-ed77-4438-9870-9b2220f4a1a4" />
+
 
 
 ---
