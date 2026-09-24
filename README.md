@@ -1,4 +1,4 @@
-# Irri-gator 🐊🪴
+# Irri-gator 🐊
 
 Irri-gator is a cross-functional, IoT-automated plant watering system designed to scale from a single houseplant to an entire indoor garden. By combining affordable edge hardware, a centralized local orchestrator, and a cloud-backed mobile application, Irri-gator makes automated plant care accessible, observable, and intelligent.
 
